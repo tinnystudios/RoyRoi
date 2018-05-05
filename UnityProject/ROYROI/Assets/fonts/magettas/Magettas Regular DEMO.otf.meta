@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: fe0032c044aea15419f604f05738f736
+timeCreated: 1525487774
+licenseType: Pro
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Magettas DEMO
+  fontNames:
+  - Magettas DEMO
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 8ee458b41574b9240abc4aa9a1cd01f3, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
