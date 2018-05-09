@@ -7,6 +7,7 @@ public class AppMain : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         Screen.fullScreen = false;
+        ApplicationChrome.statusBarState = ApplicationChrome.States.VisibleOverContent;
     }
 
 }
