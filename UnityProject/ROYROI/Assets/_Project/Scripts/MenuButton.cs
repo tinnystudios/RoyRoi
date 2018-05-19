@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class MenuButton : MonoBehaviour, IPointerClickHandler {
-    public PopUpList popUpList;
+    public SideBar sideBar;
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        popUpList.Toggle();
+        Debug.Log("clicked)");
+        sideBar.Enter();
     }
 }

@@ -80,7 +80,7 @@ public class PopUpList : StateBase
     public void SetActiveState(bool active) {
         isActive = active;
         blocker.SetActive(active);
-        content.SetActive(active);
+        //content.SetActive(active);
     }
 
 }
