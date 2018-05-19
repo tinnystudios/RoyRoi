@@ -9,7 +9,6 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject m_Blocker;
 
-    public Vector2 m_Delta;
     public RectTransform m_Content;
     [Range(0,1)]public float value = 1;
     public float sensitivity = 0.5F;
@@ -17,7 +16,6 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
 
     public Vector3 lastPos;
 
-    public bool isPressed;
     public bool isEnter;
     public bool isUserUsing;
 
@@ -33,14 +31,13 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
 
         ReadInputAndApplyState();
         ReadStateAndApplyValue();
-        ReadInputDelta();
         ApplyPosition();
         ApplyBlockerLogic();
     }
 
     private void ReadStateAndApplyValue()
     {
-        if (isEnter && isPressed || isUserUsing)
+        if (isEnter && TouchInput.isPressed || isUserUsing)
         {
             ApplyValue();
             isUserUsing = true;
@@ -49,13 +46,6 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
 
     public void ReadInputAndApplyState()
     {
-        if (Input.GetMouseButton(0))
-        {
-            isPressed = true;
-        }
-        else
-            isPressed = false;
-
         if (Input.GetMouseButtonUp(0))
         {
             if (value > 0.3F)
@@ -71,7 +61,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
 
     public void ApplyValue()
     {
-        value += m_Delta.x * sensitivity * Time.deltaTime * dir;
+        value += TouchInput.delta.x * sensitivity * Time.deltaTime * dir;
         value = Mathf.Clamp01(value);
     }
 
@@ -88,15 +78,9 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
         m_Content.anchoredPosition = Vector3.Lerp(minPos, maxPos, value);
     }
 
-    public void ReadInputDelta()
-    {
-        var currentPosition = Input.mousePosition;
-        m_Delta = currentPosition - lastPos;
-        lastPos = currentPosition;
-    }
-
     public void ApplyBlockerLogic()
     {
+        //
         if (m_Blocker.activeInHierarchy)
         {
             var currentSelectedObject = EventSystem.current.currentSelectedGameObject;
@@ -111,6 +95,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
             }
         }
 
+        //if moving
         if (Input.GetMouseButton(0))
         {
             if (value != 1 && value != 0)
@@ -141,7 +126,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         lastPos = Input.mousePosition;
-        m_Delta = Vector3.zero;
+        TouchInput.delta = Vector3.zero;
         isEnter = true;
     }
 
