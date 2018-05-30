@@ -1,4 +1,0 @@
-sceneSetups:
-- path: E:/Unity Projects/Personal/Lessons/Inheritancy/Inheritancy/Assets/Scenes/BasicMenu.unity
-  isLoaded: 1
-  isActive: 1
