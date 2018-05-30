@@ -8,6 +8,7 @@ public class PageController : MonoBehaviour {
 
     public void Awake()
     {
+        //Initialize pages
         var pages = GetComponentsInChildren<PageState>(includeInactive: true);
 
         foreach (var page in pages) {
@@ -18,7 +19,7 @@ public class PageController : MonoBehaviour {
             }
             else
             {
-                page.Exit();
+                page.Exit(false);
             }
 
         }

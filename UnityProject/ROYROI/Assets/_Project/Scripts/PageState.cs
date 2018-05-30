@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PageState : StateBase
+public abstract class PageState : StateBase, IEventStack
 {
     public GameObject header;
     public GameObject content;
+
     public static PageState CurrentPage { get; set; }
 
     public override void Enter()
@@ -21,6 +22,24 @@ public abstract class PageState : StateBase
 
         CurrentPage = this;
         base.Enter();
+    }
+
+    public override void Exit()
+    {
+        AppStack.Add(this);
+        base.Exit();
+    }
+
+    public void Exit(bool includeStack) {
+        if (includeStack)
+            this.Exit();
+
+        else base.Exit();
+    }
+
+    public void OnEnterStack()
+    {
+        Enter();
     }
 
     public override IEnumerator OnTransitionIn()

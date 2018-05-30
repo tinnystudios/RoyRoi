@@ -12,10 +12,20 @@ public class TouchInput : MonoBehaviour {
     public static Action OnTouch;
     public static Action OnTouchUp;
 
+    public static Action OnDragVertically;
+    public static Action OnDragHorizontally;
+
     private Vector3 lastPos;
+    public Vector2 m_delta;    
+
 
     // Update is called once per frame
     void Update () {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            AppStack.Invoke();
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -26,6 +36,24 @@ public class TouchInput : MonoBehaviour {
         {
             if (OnTouch != null)
                 OnTouch.Invoke();
+
+            //Detect amount of drag
+            var y = Mathf.Abs(delta.y);
+            var x = Mathf.Abs(delta.x);
+
+            //Vertically moved
+            if (y > x + 3)
+            {
+                if (OnDragVertically != null)
+                    OnDragVertically.Invoke();
+            }
+
+            if (x > y + 3)
+            {
+                if (OnDragHorizontally != null)
+                    OnDragHorizontally.Invoke();
+            }
+
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -39,6 +67,8 @@ public class TouchInput : MonoBehaviour {
         var currentPosition = Input.mousePosition;
         delta = currentPosition - lastPos;
         lastPos = currentPosition;
+
+        m_delta = delta;
     }
 
 
