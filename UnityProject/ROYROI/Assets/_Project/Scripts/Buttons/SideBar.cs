@@ -87,11 +87,11 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
 
             if (currentSelectedObject == null)
                 return;
-
+           
             if (Input.GetMouseButtonUp(0))
             {
-                if (currentSelectedObject != gameObject)
-                    Exit();
+                Debug.Log(currentSelectedObject.name);
+                if (currentSelectedObject != gameObject) Exit();
             }
         }
 
@@ -140,7 +140,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
     //State
     public override IEnumerator OnTransitionIn()
     {
-        m_Blocker.SetActive(true);
+        //m_Blocker.SetActive(true);
         value = 1;
         yield break;
     }
