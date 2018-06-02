@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 [ExecuteInEditMode]
-public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
+public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     public GameObject m_Blocker;
 
@@ -90,7 +90,6 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
            
             if (Input.GetMouseButtonUp(0))
             {
-                Debug.Log(currentSelectedObject.name);
                 if (currentSelectedObject != gameObject) Exit();
             }
         }
@@ -117,6 +116,8 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
                 //Off
                 m_Blocker.SetActive(false);
             }
+
+            isUserUsing = false;
         }
 
     }
@@ -127,7 +128,9 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
     {
         lastPos = Input.mousePosition;
         TouchInput.delta = Vector3.zero;
-        isEnter = true;
+
+        if(value != 0)
+         isEnter = true;
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -151,4 +154,8 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler
         yield break;
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        isEnter = true;
+    }
 }
