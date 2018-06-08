@@ -223,7 +223,7 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 40
-    m_Alignment: 0
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -560,7 +560,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af09a126a6864584d93cc28d34794d9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Content: {fileID: 0}
   m_Body: {fileID: 1274248220179336}
 --- !u!222 &222097000646492480
 CanvasRenderer:
@@ -689,7 +688,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 214.96437, y: 50}
+  m_SizeDelta: {x: 214.96437, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224670930711221430
 RectTransform:
@@ -707,7 +706,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 308.07602, y: 50}
+  m_SizeDelta: {x: 308.07602, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224706335830525396
 RectTransform:
