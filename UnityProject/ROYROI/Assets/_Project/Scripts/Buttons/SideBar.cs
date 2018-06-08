@@ -78,6 +78,11 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         m_Content.anchoredPosition = Vector3.Lerp(minPos, maxPos, value);
     }
 
+    public bool IsSideBarTab(GameObject go)
+    {
+        return go.GetComponent<ISideBarChildren>() != null;
+    }
+
     public void ApplyBlockerLogic()
     {
         //
@@ -90,7 +95,10 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
            
             if (Input.GetMouseButtonUp(0))
             {
-                if (currentSelectedObject != gameObject) Exit();
+                if (currentSelectedObject != gameObject && !IsSideBarTab(currentSelectedObject))
+                {
+                    Exit();
+                } 
             }
         }
 
@@ -122,7 +130,6 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
     }
 
- 
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -143,15 +150,26 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
     //State
     public override IEnumerator OnTransitionIn()
     {
-        //m_Blocker.SetActive(true);
         value = 1;
+        ResetChildren();
         yield break;
     }
 
     public override IEnumerator OnTransitionOut()
     {
-        value = 0; 
+        value = 0;
+        ResetChildren();
         yield break;
+    }
+
+    public void ResetChildren()
+    {
+        var children = GetComponentsInChildren<ISideBarChildren>();
+
+        foreach (var s in children)
+        {
+            s.OnReset();
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
