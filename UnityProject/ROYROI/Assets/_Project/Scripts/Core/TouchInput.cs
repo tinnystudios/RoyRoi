@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 //#TODO Create the touch input module currently SideBar is generatin delta & pressed which should belong to touchInput
@@ -14,11 +15,37 @@ public class TouchInput : MonoBehaviour {
     public static Action OnDragHorizontally;
 
     private Vector3 lastPos;
-    public Vector2 m_delta;    
+    public Vector2 m_delta;
+
+    public Canvas parentCanvas;
+
+    public void Start()
+    {
+        Vector2 pos;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            parentCanvas.transform as RectTransform, Input.mousePosition,
+            parentCanvas.worldCamera,
+            out pos);
+    }
 
 
     // Update is called once per frame
     void Update () {
+
+        Vector2 movePos;
+
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            parentCanvas.transform as RectTransform,
+            Input.mousePosition, parentCanvas.worldCamera,
+            out movePos);
+
+        var currentPosition = parentCanvas.transform.TransformPoint(movePos);
+
+        delta = currentPosition - lastPos;
+        lastPos = currentPosition;
+
+        m_delta = delta;
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -34,24 +61,6 @@ public class TouchInput : MonoBehaviour {
         {
             if (OnTouch != null)
                 OnTouch.Invoke();
-
-            //Detect amount of drag
-            var y = Mathf.Abs(delta.y);
-            var x = Mathf.Abs(delta.x);
-
-            //Vertically moved
-            if (y > x + 3)
-            {
-                if (OnDragVertically != null)
-                    OnDragVertically.Invoke();
-            }
-
-            if (x > y + 3)
-            {
-                if (OnDragHorizontally != null)
-                    OnDragHorizontally.Invoke();
-            }
-
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -62,11 +71,6 @@ public class TouchInput : MonoBehaviour {
                 OnTouchUp.Invoke();
         }
 
-        var currentPosition = Input.mousePosition;
-        delta = currentPosition - lastPos;
-        lastPos = currentPosition;
-
-        m_delta = delta;
     }
 
 

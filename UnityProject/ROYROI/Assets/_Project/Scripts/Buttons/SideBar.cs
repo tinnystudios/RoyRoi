@@ -21,6 +21,10 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
     #region Drag
 
+    void Awake() {
+        ResetChildren();
+    }
+
     void Update()
     {
         if (!Application.isPlaying)
@@ -29,10 +33,10 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
             return;
         }
 
-        ReadInputAndApplyState();
         ReadStateAndApplyValue();
         ApplyPosition();
         ApplyBlockerLogic();
+        ReadInputAndApplyState();
     }
 
     private void ReadStateAndApplyValue()
@@ -43,30 +47,49 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
             isUserUsing = true;
         }
     }
-
+    public bool CanApply()
+    {
+        return isEnter && TouchInput.isPressed || isUserUsing;
+    }
     public void ReadInputAndApplyState()
     {
         if (Input.GetMouseButtonUp(0))
         {
             if (value > 0.3F)
+            {
                 value = 1;
+                SetPositionFromValue(value);
+            }
 
             if (value < 0.7F)
+            {
                 value = 0;
+                SetPositionFromValue(value);
+            }
 
             isUserUsing = false;
         }
 
     }
 
+    public void SetPositionFromValue(float v)
+    {
+        var x = Mathf.Lerp(m_Content.sizeDelta.x,0,v);
+        m_Content.anchoredPosition = new Vector2(x, 0);
+    }
+
     public void ApplyValue()
     {
-        value += TouchInput.delta.x * sensitivity * Time.deltaTime * dir;
+        value = m_Content.anchoredPosition.x / m_Content.sizeDelta.x;
+        value = Mathf.Lerp(1, 0, value);
         value = Mathf.Clamp01(value);
     }
 
     public void ApplyPosition()
     {
+        if (!CanApply())
+            return;
+
         var computePosition = m_Content.anchoredPosition;
 
         var minPos = computePosition;
@@ -75,7 +98,16 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         minPos.x = m_Content.sizeDelta.x;
         maxPos.x = 0;
 
-        m_Content.anchoredPosition = Vector3.Lerp(minPos, maxPos, value);
+        //size delta 
+
+        m_Content.position += new Vector3(TouchInput.delta.x, 0,0);
+
+        if (m_Content.anchoredPosition.x > minPos.x)
+            m_Content.anchoredPosition = Vector3.Lerp(minPos, maxPos, 0);
+
+        if (m_Content.anchoredPosition.x < maxPos.x)
+            m_Content.anchoredPosition = Vector3.Lerp(minPos, maxPos, 1);
+
     }
 
     public bool IsSideBarTab(GameObject go)
