@@ -5205,7 +5205,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1416378630}
   m_HandleRect: {fileID: 1416378629}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -5429,6 +5429,15 @@ MonoBehaviour:
   lastPos: {x: 914, y: 792, z: 0}
   isEnter: 0
   isUserUsing: 0
+  m_PageButtons:
+  - {fileID: 1178497040}
+  - {fileID: 1062599375}
+  - {fileID: 475942389}
+  - {fileID: 1041460190}
+  - {fileID: 457567952}
+  - {fileID: 399849600}
+  - {fileID: 771852598}
+  - {fileID: 1266014921}
 --- !u!114 &429951423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7569,7 +7578,7 @@ Prefab:
     - target: {fileID: 224860661185378816, guid: dfc6820d45e2a35438fca4088732d541,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 400
+      value: 400.00003
       objectReference: {fileID: 0}
     - target: {fileID: 224860661185378816, guid: dfc6820d45e2a35438fca4088732d541,
         type: 2}
@@ -9662,7 +9671,7 @@ Prefab:
     - target: {fileID: 224860661185378816, guid: dfc6820d45e2a35438fca4088732d541,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 400
+      value: 400.00003
       objectReference: {fileID: 0}
     - target: {fileID: 224860661185378816, guid: dfc6820d45e2a35438fca4088732d541,
         type: 2}
@@ -11895,7 +11904,7 @@ Prefab:
     - target: {fileID: 224860661185378816, guid: dfc6820d45e2a35438fca4088732d541,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 400
+      value: 400.00003
       objectReference: {fileID: 0}
     - target: {fileID: 224860661185378816, guid: dfc6820d45e2a35438fca4088732d541,
         type: 2}
@@ -22116,8 +22125,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 360121060}
   m_HandleRect: {fileID: 360121059}
   m_Direction: 2
-  m_Value: 0.9999997
-  m_Size: 0.61373395
+  m_Value: 0.9999996
+  m_Size: 0.7464522
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25839,7 +25848,7 @@ Prefab:
     - target: {fileID: 224860661185378816, guid: dfc6820d45e2a35438fca4088732d541,
         type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 400
+      value: 400.00003
       objectReference: {fileID: 0}
     - target: {fileID: 224860661185378816, guid: dfc6820d45e2a35438fca4088732d541,
         type: 2}

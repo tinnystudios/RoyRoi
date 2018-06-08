@@ -19,10 +19,27 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
     public bool isEnter;
     public bool isUserUsing;
 
+    public List<PageButton> m_PageButtons;
     #region Drag
 
     void Awake() {
+
+        GetComponentsInChildren(includeInactive: true, result: m_PageButtons);
+
+        foreach (var button in m_PageButtons)
+        {
+            button.m_OnClick += Exit;
+        }
+
         ResetChildren();
+    }
+
+    void OnDestroy()
+    {
+        foreach (var button in m_PageButtons)
+        {
+            button.m_OnClick -= Exit;
+        }
     }
 
     void Update()
@@ -115,16 +132,17 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         return go.GetComponent<ISideBarChildren>() != null;
     }
 
+
     public void ApplyBlockerLogic()
     {
-        //
         if (m_Blocker.activeInHierarchy)
         {
+
             var currentSelectedObject = EventSystem.current.currentSelectedGameObject;
 
             if (currentSelectedObject == null)
                 return;
-           
+
             if (Input.GetMouseButtonUp(0))
             {
                 if (currentSelectedObject != gameObject && !IsSideBarTab(currentSelectedObject))
@@ -146,19 +164,23 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         //
         if (Input.GetMouseButtonUp(0))
         {
+            //Invisible
             if (value >= 1)
             {
-                //On
                 m_Blocker.SetActive(true);
+                SetPositionFromValue(1);
             }
             else
             {
-                //Off
                 m_Blocker.SetActive(false);
+                SetPositionFromValue(0);
             }
 
             isUserUsing = false;
         }
+
+
+
 
     }
 
@@ -183,6 +205,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
     public override IEnumerator OnTransitionIn()
     {
         value = 1;
+        SetPositionFromValue(value);
         ResetChildren();
         yield break;
     }
@@ -190,6 +213,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
     public override IEnumerator OnTransitionOut()
     {
         value = 0;
+        SetPositionFromValue(value);
         ResetChildren();
         yield break;
     }
