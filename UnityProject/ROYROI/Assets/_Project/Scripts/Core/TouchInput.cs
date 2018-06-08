@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //#TODO Create the touch input module currently SideBar is generatin delta & pressed which should belong to touchInput
