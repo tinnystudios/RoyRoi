@@ -50,15 +50,25 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
             return;
         }
 
+        if (!TouchInput.isMovingHorizontally)
+        {
+            isUserUsing = false;
+        }
+
         ReadStateAndApplyValue();
         ApplyPosition();
         ApplyBlockerLogic();
         ReadInputAndApplyState();
+
+        if (Input.GetMouseButtonUp(0)) {
+            isEnter = false;
+        }
+
     }
 
     private void ReadStateAndApplyValue()
     {
-        if (isEnter && TouchInput.isPressed || isUserUsing)
+        if (CanApply())
         {
             ApplyValue();
             isUserUsing = true;
@@ -72,16 +82,17 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
     {
         if (Input.GetMouseButtonUp(0))
         {
-            if (value > 0.3F)
+            if (value > 0.5F)
             {
                 value = 1;
                 SetPositionFromValue(value);
+                m_Blocker.SetActive(true);
             }
-
-            if (value < 0.7F)
+            else
             {
                 value = 0;
                 SetPositionFromValue(value);
+                m_Blocker.SetActive(false);
             }
 
             isUserUsing = false;
@@ -105,6 +116,9 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
     public void ApplyPosition()
     {
         if (!CanApply())
+            return;
+
+        if (!TouchInput.isMovingHorizontally)
             return;
 
         var computePosition = m_Content.anchoredPosition;
@@ -135,6 +149,10 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
     public void ApplyBlockerLogic()
     {
+        if (TouchInput.isMovingHorizontally)
+            return;
+
+        //If blocker is active, And you released on a button, turn off
         if (m_Blocker.activeInHierarchy)
         {
 
@@ -152,7 +170,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
             }
         }
 
-        //if moving
+        //if pressing down and you're not full, turn off the blocker.
         if (Input.GetMouseButton(0))
         {
             if (value != 1 && value != 0)
@@ -161,7 +179,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
             }
         }
 
-        //
+        //If release, check value
         if (Input.GetMouseButtonUp(0))
         {
             //Invisible
@@ -178,18 +196,11 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
             isUserUsing = false;
         }
-
-
-
-
     }
 
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        lastPos = Input.mousePosition;
-        TouchInput.delta = Vector3.zero;
-
         if(value != 0)
          isEnter = true;
     }
@@ -215,6 +226,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         value = 0;
         SetPositionFromValue(value);
         ResetChildren();
+        m_Blocker.SetActive(false);
         yield break;
     }
 

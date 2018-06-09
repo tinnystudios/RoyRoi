@@ -19,6 +19,15 @@ public class TouchInput : MonoBehaviour {
 
     public Canvas parentCanvas;
 
+    private Vector3 firstPosition;
+    public static bool isMovingHorizontally;
+    public float minimumDrag = 2;
+
+    private void Awake()
+    {
+        Input.multiTouchEnabled = false;
+    }
+
     public void Start()
     {
         Vector2 pos;
@@ -55,12 +64,26 @@ public class TouchInput : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             isPressed = true;
+            firstPosition = parentCanvas.transform.TransformPoint(movePos);
         }
 
         if (Input.GetMouseButton(0))
         {
             if (OnTouch != null)
                 OnTouch.Invoke();
+
+            var secondPosition = parentCanvas.transform.TransformPoint(movePos);
+
+            var movedDelta = firstPosition - secondPosition;
+
+            if (Mathf.Abs(movedDelta.x) > minimumDrag)
+            {
+                //You've moved!
+                isMovingHorizontally = true;
+            }
+            else {
+                isMovingHorizontally = false;
+            }
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -69,6 +92,8 @@ public class TouchInput : MonoBehaviour {
 
             if(OnTouchUp != null)
                 OnTouchUp.Invoke();
+
+            isMovingHorizontally = false;
         }
 
     }
