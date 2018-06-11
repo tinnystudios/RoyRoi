@@ -32,6 +32,8 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         }
 
         ResetChildren();
+
+        TouchInput.OnTouchUp += OnTouchUp;
     }
 
     void OnDestroy()
@@ -57,7 +59,6 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
         ReadStateAndApplyValue();
         ApplyPosition();
-        ApplyBlockerLogic();
         ReadInputAndApplyState();
 
         if (Input.GetMouseButtonUp(0)) {
@@ -80,6 +81,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
     }
     public void ReadInputAndApplyState()
     {
+
         if (Input.GetMouseButtonUp(0))
         {
             if (value > 0.5F)
@@ -146,58 +148,36 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         return go.GetComponent<ISideBarChildren>() != null;
     }
 
+    public void OnTouchUp() {
 
-    public void ApplyBlockerLogic()
-    {
-        if (TouchInput.isMovingHorizontally)
-            return;
-
-        //If blocker is active, And you released on a button, turn off
-        if (m_Blocker.activeInHierarchy)
+        if (m_Blocker.activeInHierarchy && !TouchInput.isMovingHorizontally)
         {
-
             var currentSelectedObject = EventSystem.current.currentSelectedGameObject;
 
             if (currentSelectedObject == null)
                 return;
 
-            if (Input.GetMouseButtonUp(0))
+            if (currentSelectedObject != gameObject && !IsSideBarTab(currentSelectedObject))
             {
-                if (currentSelectedObject != gameObject && !IsSideBarTab(currentSelectedObject))
-                {
-                    Exit();
-                } 
+                Exit();
             }
         }
 
-        //if pressing down and you're not full, turn off the blocker.
-        if (Input.GetMouseButton(0))
+        //Making sure the blocker is on.
+        if (value >= 1)
         {
-            if (value != 1 && value != 0)
-            {
-                m_Blocker.SetActive(false);
-            }
+            m_Blocker.SetActive(true);
+            SetPositionFromValue(1);
         }
-
-        //If release, check value
-        if (Input.GetMouseButtonUp(0))
+        else
         {
-            //Invisible
-            if (value >= 1)
-            {
-                m_Blocker.SetActive(true);
-                SetPositionFromValue(1);
-            }
-            else
-            {
-                m_Blocker.SetActive(false);
-                SetPositionFromValue(0);
-            }
-
-            isUserUsing = false;
+            m_Blocker.SetActive(false);
+            SetPositionFromValue(0);
         }
+
+        isUserUsing = false;
+
     }
-
 
     public void OnPointerEnter(PointerEventData eventData)
     {

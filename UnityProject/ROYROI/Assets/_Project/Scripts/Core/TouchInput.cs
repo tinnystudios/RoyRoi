@@ -81,9 +81,7 @@ public class TouchInput : MonoBehaviour {
                 //You've moved!
                 isMovingHorizontally = true;
             }
-            else {
-                isMovingHorizontally = false;
-            }
+
         }
 
         if (Input.GetMouseButtonUp(0))
