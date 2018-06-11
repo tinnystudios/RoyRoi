@@ -30,7 +30,7 @@ public abstract class PageState : StateBase, IEventStack
         base.Exit();
     }
 
-    public void Exit(bool includeStack) {
+    public virtual void Exit(bool includeStack) {
         if (includeStack)
             this.Exit();
 
