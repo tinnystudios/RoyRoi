@@ -17,6 +17,11 @@ public class SignInState : PageState
         {
             m_HomeState.Enter();
         }
+        else
+        {
+            m_Header.Exit();
+            nav.Exit();
+        }
     }
 
     public void SignIn()
@@ -29,26 +34,22 @@ public class SignInState : PageState
     public void SignOut()
     {
         PlayerPrefs.DeleteKey(PrefSignedIn);
+
+        m_Header.Exit();
+        nav.Exit();
+
         Enter();
     }
 
     public override IEnumerator OnTransitionIn()
     {
         yield return base.OnTransitionIn();
-
-        m_Header.Exit();
-        nav.Exit();
-
         yield break;
     }
 
     public override IEnumerator OnTransitionOut()
     {
         yield return base.OnTransitionOut();
-
-        m_Header.Enter();
-        nav.Enter();
-
         yield break;
     }
 }

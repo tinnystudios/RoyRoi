@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NavigationBar : StateBase
+public class NavigationBar : StateBase, ISubState
 {
     public GameObject m_Content;
 

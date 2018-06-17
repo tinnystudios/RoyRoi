@@ -8,12 +8,13 @@ using UnityEngine.EventSystems;
 public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler
 {
     public GameObject m_Blocker;
-
+    
     public RectTransform m_Content;
     [Range(0,1)]public float value = 1;
     public float sensitivity = 0.5F;
     public float dir = 1;
-
+    public float snapDuration = 0.1F;
+    public AnimationCurve snapCurve;
     public Vector3 lastPos;
 
     public bool isEnter;
@@ -104,8 +105,21 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
     public void SetPositionFromValue(float v)
     {
+        StopAllCoroutines();
+
         var x = Mathf.Lerp(m_Content.sizeDelta.x,0,v);
-        m_Content.anchoredPosition = new Vector2(x, 0);
+        StartCoroutine(SetPosition(new Vector2(x, 0), snapDuration));
+    }
+
+    IEnumerator SetPosition(Vector2 position, float length)
+    {
+        var a = m_Content.anchoredPosition;
+        for (float i = 0; i <= 1.0F; i += Time.deltaTime / length)
+        {
+            m_Content.anchoredPosition = Vector2.Lerp(a, position, snapCurve.Evaluate(i));
+            yield return null;
+        }
+        m_Content.anchoredPosition = Vector2.Lerp(a, position, 1.0F);
     }
 
     public void ApplyValue()

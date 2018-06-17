@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Header : StateBase
+public class Header : StateBase, ISubState
 {
 
     public override IEnumerator OnTransitionIn()
@@ -16,4 +16,9 @@ public class Header : StateBase
         gameObject.SetActive(false);
         yield break;
     }
+}
+
+public interface ISubState
+{
+
 }
