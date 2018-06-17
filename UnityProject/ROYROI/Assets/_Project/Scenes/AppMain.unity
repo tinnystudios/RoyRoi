@@ -6574,6 +6574,7 @@ MonoBehaviour:
   - {fileID: 399849600}
   - {fileID: 771852598}
   - {fileID: 1266014921}
+  isSetting: 0
 --- !u!114 &429951423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22929,8 +22930,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1845866252}
   m_HandleRect: {fileID: 1845866251}
   m_Direction: 2
-  m_Value: 0.9999996
-  m_Size: 0.7790938
+  m_Value: 0.99999964
+  m_Size: 0.729466
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

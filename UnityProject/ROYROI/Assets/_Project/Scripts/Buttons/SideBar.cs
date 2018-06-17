@@ -49,7 +49,7 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
     {
         if (!Application.isPlaying)
         {
-            ApplyPosition();
+            ProcessDrag();
             return;
         }
 
@@ -59,8 +59,8 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         }
 
         ReadStateAndApplyValue();
-        ApplyPosition();
-        ReadInputAndApplyState();
+        ProcessDrag();
+        //ReadInputAndApplyState();
 
         if (Input.GetMouseButtonUp(0)) {
             isEnter = false;
@@ -103,23 +103,33 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
     }
 
-    public void SetPositionFromValue(float v)
+    public bool isSetting = false;
+
+    public Coroutine SetPositionFromValue(float v)
     {
-        StopAllCoroutines();
+        if (ValueToAnchorPosition(value) == m_Content.anchoredPosition)
+            return null;
+
+        if (isSetting)
+            return null;
 
         var x = Mathf.Lerp(m_Content.sizeDelta.x,0,v);
-        StartCoroutine(SetPosition(new Vector2(x, 0), snapDuration));
+        return StartCoroutine(SetPosition(new Vector2(x, 0), snapDuration));
     }
 
     IEnumerator SetPosition(Vector2 position, float length)
     {
+        isSetting = true;
         var a = m_Content.anchoredPosition;
         for (float i = 0; i <= 1.0F; i += Time.deltaTime / length)
         {
             m_Content.anchoredPosition = Vector2.Lerp(a, position, snapCurve.Evaluate(i));
             yield return null;
         }
+
         m_Content.anchoredPosition = Vector2.Lerp(a, position, 1.0F);
+        ApplyValue();
+        isSetting = false;
     }
 
     public void ApplyValue()
@@ -129,7 +139,21 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
         value = Mathf.Clamp01(value);
     }
 
-    public void ApplyPosition()
+    public float AnchorPositionToValue(Vector2 position)
+    {
+        var v = m_Content.anchoredPosition.x / m_Content.sizeDelta.x;
+        v = Mathf.Lerp(1, 0, v);
+        v = Mathf.Clamp01(value);
+        return v;
+    }
+
+    public Vector2 ValueToAnchorPosition(float value)
+    {
+        var x = Mathf.Lerp(m_Content.sizeDelta.x, 0, value);
+        return new Vector2(x, 0);
+    }
+
+    public void ProcessDrag()
     {
         if (!CanApply())
             return;
@@ -154,7 +178,6 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
         if (m_Content.anchoredPosition.x < maxPos.x)
             m_Content.anchoredPosition = Vector3.Lerp(minPos, maxPos, 1);
-
     }
 
     public bool IsSideBarTab(GameObject go)
@@ -174,23 +197,40 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
             if (currentSelectedObject != gameObject && !IsSideBarTab(currentSelectedObject))
             {
                 Exit();
+                Debug.Log("Exit");
             }
         }
 
         //Making sure the blocker is on.
-        if (value >= 1)
+        if (value >= 0.5F)
         {
+            value = 1;
             m_Blocker.SetActive(true);
             SetPositionFromValue(1);
         }
         else
         {
+            value = 0;
             m_Blocker.SetActive(false);
             SetPositionFromValue(0);
         }
 
         isUserUsing = false;
 
+    }
+
+    public void CheckBlocker()
+    {
+
+        //Making sure the blocker is on.
+        if (value >= 1)
+        {
+            m_Blocker.SetActive(true);
+        }
+        else
+        {
+            m_Blocker.SetActive(false);
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -217,11 +257,10 @@ public class SideBar : StateBase, IPointerEnterHandler, IPointerExitHandler, IPo
 
     public override IEnumerator OnTransitionOut()
     {
-        value = 0;
-        SetPositionFromValue(value);
         ResetChildren();
+        value = 0;
+        yield return SetPositionFromValue(value);
         m_Blocker.SetActive(false);
-        yield break;
     }
 
     public void ResetChildren()
