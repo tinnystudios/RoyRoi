@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class PageController : MonoBehaviour {
 
-    public PageState m_CurrentPage;
-
-    public void Awake()
+    public void Initialize(PageState initialPage)
     {
         //Initialize pages
         var pages = GetComponentsInChildren<PageState>(includeInactive: true);
 
         foreach (var page in pages) {
 
-            if (page == m_CurrentPage)
+            if (page == initialPage)
             {
-                page.Enter();
+                //page.Enter();
             }
             else
             {
@@ -23,6 +21,8 @@ public class PageController : MonoBehaviour {
             }
 
         }
+
+        initialPage.Enter();
 
     }
 }
