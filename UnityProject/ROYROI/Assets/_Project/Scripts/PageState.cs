@@ -11,16 +11,26 @@ public abstract class PageState : StateBase, IEventStack
 
     public override void Enter()
     {
-        if (CurrentPage == this) {
+        Enter(includeStack: true);
+    }
+
+    public void Enter(bool includeStack)
+    {
+        if (CurrentPage == this)
+        {
             return;
         }
 
         if (CurrentPage != null)
         {
-            CurrentPage.Exit();
+            if (includeStack)
+                CurrentPage.Exit();
+            else
+                CurrentPage.Exit(includeStack: false);
         }
 
         CurrentPage = this;
+
         base.Enter();
     }
 
@@ -37,9 +47,9 @@ public abstract class PageState : StateBase, IEventStack
         else base.Exit();
     }
 
-    public void OnEnterStack()
+    public virtual void OnEnterStack()
     {
-        Enter();
+        Enter(includeStack:false);
     }
 
     public override IEnumerator OnTransitionIn()

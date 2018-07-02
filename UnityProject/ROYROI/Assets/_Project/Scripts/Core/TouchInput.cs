@@ -14,6 +14,8 @@ public class TouchInput : MonoBehaviour {
     public static Action OnDragVertically;
     public static Action OnDragHorizontally;
 
+    public static Action OnQuit;
+
     private Vector3 lastPos;
     public Vector2 m_delta;
 
@@ -22,6 +24,9 @@ public class TouchInput : MonoBehaviour {
     private Vector3 firstPosition;
     public static bool isMovingHorizontally;
     public float minimumDrag = 2;
+
+    private int backButtonCount = 0;
+    private float backButtonFirstTime = 0;
 
     private void Awake()
     {
@@ -56,10 +61,38 @@ public class TouchInput : MonoBehaviour {
 
         m_delta = delta;
 
+        var backButtonTimeLapsed = Time.time - backButtonFirstTime;
+
+        //Back button
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            AppStack.Invoke();
+
+            if (AppStack.Count == 0)
+            {
+                //Reset
+                if (backButtonTimeLapsed >= 0.5F)
+                {
+                    backButtonFirstTime = 0.0F;
+                }
+                else
+                {
+                    Application.Quit();
+                }
+
+                //First press
+                if (backButtonFirstTime == 0.0F)
+                {
+                    backButtonFirstTime = Time.time;
+                    AlertService.Instance.Show();
+                }
+            }
+            else
+            {
+                AppStack.Invoke();
+            }
+
         }
+
 
         if (Input.GetMouseButtonDown(0))
         {

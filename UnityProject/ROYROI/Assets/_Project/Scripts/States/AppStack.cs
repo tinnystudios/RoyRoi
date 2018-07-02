@@ -16,8 +16,35 @@ public static class AppStack {
     public static void Invoke() {
         if (m_EventStacks.Count > 0)
         {
-            m_EventStacks[m_EventStacks.Count-1].OnEnterStack();
-            m_EventStacks.RemoveAt(m_EventStacks.Count-1);
+            var stack = m_EventStacks[m_EventStacks.Count - 1];
+
+            stack.OnEnterStack();
+
+            if (m_EventStacks.Contains(stack))
+            {
+                m_EventStacks.Remove(stack);
+            }
+        }
+    }
+
+    public static int Count
+    {
+        get
+        {
+            return m_EventStacks.Count;
+        }
+    }
+
+    public static void Clear()
+    {
+        m_EventStacks.Clear();
+    }
+
+    public static List<IEventStack> Stacks
+    {
+        get
+        {
+            return m_EventStacks;
         }
     }
 
